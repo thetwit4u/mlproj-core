@@ -83,12 +83,17 @@
                 var array = [];
                 for ( var i = 1; i <= forests; ++i ) {
                     var num = i.toLocaleString('en-IN', { minimumIntegerDigits: 3 });
-                    array.push(json.name + '-' + num);
+                    array.push({name: json.name + '-' + num});
                 }
                 forests = array;
-            }
+            } 
+           
+
             forests.forEach(f => {
-                this.forests[f] = new Forest(this, f);
+                if ( !f.name ) {
+                    throw new Error('Pleaese verify your forest configuration!  Name property is missing');
+                }
+                this.forests[f.name] = new Forest(this, f);
             });
         }
 
@@ -351,11 +356,11 @@
      */
     class Forest extends Component
     {
-        constructor(db, name)
+        constructor(db, forestData)
         {
             super();
             this.db   = db;
-            this.name = name;
+            Object.keys(forestData).forEach(p => { this[p] = forestData[p] });
         }
 
         create(actions, display, forests)

@@ -601,10 +601,13 @@
     class ForestCreate extends ManagePost
     {
         constructor(forest) {
-            var name = forest && forest.name;
-            var db   = forest && forest.db && forest.db.name;
+            var name     = forest && forest.name;
+            var db       = forest && forest.db && forest.db.name;
+            var xtraData = Object.assign({}, forest);
+            delete xtraData.name;
+            delete xtraData.db; 
             super('/forests',
-                  { "forest-name": name, "database": db },
+                  { "forest-name": name, "database": db, ...xtraData},
                   'Create forest:  \t\t' + name);
         }
     }
@@ -636,7 +639,7 @@
         }
     }
 
-    /*~
+    /*~3
      * Management API: retrieve properties of a database.
      */
     class DatabaseProps extends ManageGet
