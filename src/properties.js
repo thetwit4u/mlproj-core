@@ -925,6 +925,7 @@
         .add('modules',  false, new Ignore())
         .add('type',     true,  new    Enum('server-type',   'type', [ 'http', 'rest', 'xdbc' ]).freeze())
         .add('port',     true,  new Integer('port',          'port'))
+        .add('ssl',      false,  new Ignore())
         .add('root',     false, new  String('root',          'root'))
         .add('rewriter', false, new  String('url-rewriter',  'url rewriter'))
         .add('handler',  false, new  String('error-handler', 'error handler'))

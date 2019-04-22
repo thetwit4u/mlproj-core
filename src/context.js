@@ -203,7 +203,7 @@
                 path = api.root + (url || params.path || '');
             }
             else {
-                ssl  = params.ssl;
+                ssl  = params.ssl ;
                 port = params.port;
                 path = url || params.path || '/';
             }

@@ -556,7 +556,7 @@
             }
             if ( this.rest ) {
                 let keys = Object.keys(this.rest).filter(k => {
-                    return k !== 'error-format' && k !== 'xdbc';
+                    return k !== 'error-format' && k !== 'xdbc' && k !== 'ssl';
                 });
                 if ( keys.length ) {
                     const map = {
@@ -576,7 +576,7 @@
                         props[p] = this.rest[k];
                     });
                     // enqueue the "update rest server props" action
-                    actions.add(new act.ServerRestUpdate(this, props, this.props.port.value));
+                    actions.add(new act.ServerRestUpdate(this, props, this.props.port.value, this.rest.ssl));
                 }
             }
         }
@@ -686,7 +686,8 @@
                     obj[name] = current;
                 }
             };
-            const props = new act.ServerRestProps(this, this.props.port.value).execute(actions.ctxt);
+
+            const props = new act.ServerRestProps(this, this.props.port.value, this.rest.ssl).execute(actions.ctxt);
             update('debug',                  bool(props['debug']),                  this.rest && this.rest['debug'],               false);
             update('document-transform-all', bool(props['document-transform-all']), this.rest && this.rest['transform-all'],       true);
             update('document-transform-out', props['document-transform-out'],       this.rest && this.rest['transform-out'] || '', '');
@@ -694,7 +695,7 @@
             update('validate-options',       bool(props['validate-options']),       this.rest && this.rest['validate-options'],    true);
             update('validate-queries',       bool(props['validate-queries']),       this.rest && this.rest['validate-queries'],    false);
             if ( Object.keys(obj).length ) {
-                actions.add(new act.ServerRestUpdate(this, obj, this.props.port.value));
+                actions.add(new act.ServerRestUpdate(this, obj, this.props.port.value,this.rest.ssl));
             }
         }
     }

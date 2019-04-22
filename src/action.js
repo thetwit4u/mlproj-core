@@ -174,6 +174,7 @@
         }
 
         send(ctxt, api, url, data) {
+            let time;
             let resp = ctxt.platform.post(this.connect(api), url, data, this.type);
             if ( resp.status === 200 ) {
                 return this.onOk(resp);
@@ -182,17 +183,20 @@
                 // nothing
             }
             // when operation needs a server restart
-            else if ( resp.status === 202 ) {
+            else if ( resp.status === 202){
                 let body = resp.body.restart;
-                let time;
                 if ( body ) {
                     time = Date.parse(body['last-startup'][0].value);
                 }
                 else {
                     time = Date();
-                    console.log('202 returned for a restart, but there is no body?!?');
-                    // throw new Error('202 returned NOT for a restart reason?!?');
+                    throw new Error('202 returned NOT for a restart reason?!?');
                 }
+                ctxt.platform.restart(time);
+            }
+            else if (resp.status === 502) {
+                time = Date();
+                console.log('502 returned for restart but lost connection, force restart to apply changes');
                 ctxt.platform.restart(time);
             }
             else {
@@ -222,13 +226,16 @@
                 // nothing
             }
             // when operation needs a server restart
-            else if ( resp.status === 202 ) {
+            else if ( resp.status === 202 ){
                 let body = resp.body.restart;
-                if ( ! body ) {
+                if (!body) {
                     throw new Error('202 returned NOT for a restart reason?!?');
                 }
                 let time = Date.parse(body['last-startup'][0].value);
                 ctxt.platform.restart(time);
+            } else if (resp.status === 502) {
+                let time = Date();
+                ctxt.platform.restart(time);    
             }
             else {
                 throw new Error('Entity not updated: ' + (resp.body.errorResponse
@@ -242,17 +249,19 @@
      */
     class ServerRestProps extends Get
     {
-        constructor(srv, port) {
+        constructor(srv, port, ssl) {
             var name = srv && srv.name;
             super(null,
                   '/v1/config/properties',
                   'Retrieve REST server props: \t' + name);
             this.port = port;
+            this.ssl =  (ssl === true);
         }
 
         connect(api) {
             let res = super.connect(api);
             res.port = this.port;
+            res.ssl = this.ssl;
             return res;
         }
     }
@@ -262,18 +271,20 @@
      */
     class ServerRestUpdate extends Put
     {
-        constructor(srv, body, port) {
+        constructor(srv, body, port, ssl) {
             var name = srv && srv.name;
             super(null,
                   '/v1/config/properties',
                   body,
                   'Update REST server props: \t' + name);
             this.port = port;
+            this.ssl =  (ssl === true);
         }
 
         connect(api) {
             let res = super.connect(api);
             res.port = this.port;
+            res.ssl = this.ssl;
             return res;
         }
     }
@@ -283,19 +294,21 @@
      */
     class ServerRestDeploy extends Put
     {
-        constructor(kind, name, path, type, port) {
+        constructor(kind, name, path, type, port, ssl) {
             super(null,
                   '/v1/config/' + kind + '/' + name,
                   path,
                   'Deploy REST ' + kind + ': \t' + name);
             this.type = type;
             this.port = port;
+            this.ssl =  (ssl === true);
         }
 
         connect(api) {
             let res = super.connect(api);
             res.port = this.port;
             res.type = this.type;
+            res.ssl = this.ssl;
             return res;
         }
 

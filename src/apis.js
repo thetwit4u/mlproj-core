@@ -162,6 +162,11 @@
                     let time = Date.parse(body['last-startup'][0].value);
                     ctxt.platform.restart(time);
                 }
+                else if (resp.status === 502) {
+                    let time = Date();
+                    console.log('502 returned for restart but lost connection, force restart to apply changes');
+                    ctxt.platform.restart(time);
+                }
                 else if ( resp.status !== 204 ) {
                     throw new Error('Error setting the server properties: '
                                     + this._name + ' - ' + resp.status);
