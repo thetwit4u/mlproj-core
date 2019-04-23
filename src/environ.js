@@ -412,6 +412,7 @@
         resolveThing(root, val, forbiden) {
             if ( typeof val === 'string' ) {
                 const result = this.resolveString(root, val, forbiden);
+                console.log(`resolved string ${val} as ${result}`);
                 if (result === 'true') {
                     return true;
                 }
