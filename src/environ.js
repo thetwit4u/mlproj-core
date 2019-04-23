@@ -411,7 +411,16 @@
 
         resolveThing(root, val, forbiden) {
             if ( typeof val === 'string' ) {
-                return this.resolveString(root, val, forbiden);
+                const result = this.resolveString(root, val, forbiden);
+                if (result === 'true') {
+                    return true;
+                }
+
+                if (result === 'false') {
+                    return false;
+                }
+
+                return result;
             }
             else if ( val instanceof Array ) {
                 return this.resolveArray(root, val);
@@ -460,6 +469,15 @@
             }
             val = this.resolveVars(root, val, forbiden, '@', '@');
             val = this.resolveVars(root, val, forbiden, '$', '');
+
+            if (val === 'true') {
+                return true;
+            }
+
+            if (val === 'false') {
+                return false;
+            }
+
             return val;
         }
 
