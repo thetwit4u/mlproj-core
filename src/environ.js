@@ -589,6 +589,8 @@
 
             // compile databases and servers
             this.compileDbsSrvs(root, cache, root.source('src'));
+
+            this.resolveObject(root);
         }
 
         compileApis(root, cache)
