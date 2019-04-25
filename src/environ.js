@@ -582,8 +582,6 @@
 
             // compile databases and servers
             this.compileDbsSrvs(root, cache, root.source('src'));
-
-            this.resolveThing(root);
         }
 
         compileApis(root, cache)
@@ -617,7 +615,8 @@
                     collapse(root._overridenApis[name], apis && apis[name]);
                 }
                 Object.keys(DEFAULT_APIS[name]).forEach(p => {
-                    root._apis[name][p] = root._overridenApis[name][p]
+                    root._apis[name][p] =
+                        root._overridenApis[name][p]
                         || DEFAULT_APIS[name][p];
                 });
             });
