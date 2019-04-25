@@ -406,6 +406,7 @@
             this.resolveArray(root, this.json.sources);
             this.resolveArray(root, this.json.roles);
             this.resolveArray(root, this.json.users);
+            this.resolveObject(root, this.json.apis);
             this.imports.forEach(i => i.resolve(root));
         }
 
@@ -581,6 +582,8 @@
 
             // compile databases and servers
             this.compileDbsSrvs(root, cache, root.source('src'));
+
+            this.resolveThing(root);
         }
 
         compileApis(root, cache)
