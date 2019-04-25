@@ -624,7 +624,7 @@
                 }
                 Object.keys(DEFAULT_APIS[name]).forEach(p => {
                     root._apis[name][p] =
-                        this.resolveThing(root, root._overridenApis[name][p]
+                        root, root._overridenApis[name][p]
                         || DEFAULT_APIS[name][p]);
                 });
             });
