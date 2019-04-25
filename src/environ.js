@@ -412,7 +412,6 @@
         resolveThing(root, val, forbiden) {
             if ( typeof val === 'string' ) {
                 const result = this.resolveString(root, val, forbiden);
-                console.log(`resolved string ${val} as ${result}`);
                 if (result === 'true') {
                     return true;
                 }
@@ -612,7 +611,6 @@
             root._overridenApis = {};
             root._apis          = {};
             // loop over all known apis
-            console.log(`params are ${JSON.stringify(root.params)}`);
             Object.keys(DEFAULT_APIS).forEach(name => {
                 // start with nothing
                 root._overridenApis[name] = {};
