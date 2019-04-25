@@ -406,12 +406,22 @@
             this.resolveArray(root, this.json.sources);
             this.resolveArray(root, this.json.roles);
             this.resolveArray(root, this.json.users);
+            this.resolveObject(root, this.json.apis);
             this.imports.forEach(i => i.resolve(root));
         }
 
         resolveThing(root, val, forbiden) {
             if ( typeof val === 'string' ) {
-                return this.resolveString(root, val, forbiden);
+                const result = this.resolveString(root, val, forbiden);
+                if (result === 'true') {
+                    return true;
+                }
+
+                if (result === 'false') {
+                    return false;
+                }
+
+                return result;
             }
             else if ( val instanceof Array ) {
                 return this.resolveArray(root, val);
@@ -460,6 +470,7 @@
             }
             val = this.resolveVars(root, val, forbiden, '@', '@');
             val = this.resolveVars(root, val, forbiden, '$', '');
+
             return val;
         }
 
