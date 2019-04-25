@@ -413,7 +413,6 @@
         resolveThing(root, val, forbiden) {
             if ( typeof val === 'string' ) {
                 const result = this.resolveString(root, val, forbiden);
-                console.log(`Replaced string ${val} with ${result}`);
                 if (result === 'true') {
                     return true;
                 }
