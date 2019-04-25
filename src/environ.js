@@ -412,6 +412,7 @@
         resolveThing(root, val, forbiden) {
             if ( typeof val === 'string' ) {
                 const result = this.resolveString(root, val, forbiden);
+                console.log(`Replaced string ${val} with ${result}`);
                 if (result === 'true') {
                     return true;
                 }
@@ -469,14 +470,6 @@
             }
             val = this.resolveVars(root, val, forbiden, '@', '@');
             val = this.resolveVars(root, val, forbiden, '$', '');
-
-            if (val === 'true') {
-                return true;
-            }
-
-            if (val === 'false') {
-                return false;
-            }
 
             return val;
         }
