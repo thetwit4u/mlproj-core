@@ -589,8 +589,6 @@
 
             // compile databases and servers
             this.compileDbsSrvs(root, cache, root.source('src'));
-
-            this.resolveObject(root);
         }
 
         compileApis(root, cache)
@@ -614,6 +612,7 @@
             root._overridenApis = {};
             root._apis          = {};
             // loop over all known apis
+            console.log(`params are ${JSON.stringify(root.params)}`);
             Object.keys(DEFAULT_APIS).forEach(name => {
                 // start with nothing
                 root._overridenApis[name] = {};
@@ -625,8 +624,8 @@
                 }
                 Object.keys(DEFAULT_APIS[name]).forEach(p => {
                     root._apis[name][p] =
-                        root._overridenApis[name][p]
-                        || DEFAULT_APIS[name][p];
+                        this.resolveThing(root, root._overridenApis[name][p]
+                        || DEFAULT_APIS[name][p]);
                 });
             });
         }
