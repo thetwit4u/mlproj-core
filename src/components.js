@@ -827,14 +827,16 @@
             }
             else if ( this.type === 'rest-src' ) {
                 const port = (srv || this.restTarget()).props.port.value;
-                this.loadRestSrc(actions, db, port, display, matches);
+                const ssl = ( srv || this.restTarget()).rest.ssl;
+                
+                this.loadRestSrc(actions, db, port, display, matches, ssl);
             }
             else {
                 throw new Error('Unknown source set type: ' + this.type);
             }
         }
 
-        loadRestSrc(actions, db, port, display, matches)
+        loadRestSrc(actions, db, port, display, matches, ssl)
         {
             const pf       = actions.ctxt.platform;
             const dir      = this.prop('dir');
@@ -875,7 +877,7 @@
             if ( pf.exists(services) ) {
                 this.walk(actions.ctxt, display, (path, uri) => {
                     actions.add(
-                        this.installRestThing(port, 'resources', uri.slice(1), path));
+                        this.installRestThing(port, 'resources', uri.slice(1), path, ssl));
                 }, services);
             }
             else if ( display.verbose ) {
@@ -886,7 +888,7 @@
             if ( pf.exists(transforms) ) {
                 this.walk(actions.ctxt, display, (path, uri) => {
                     actions.add(
-                        this.installRestThing(port, 'transforms', uri.slice(1), path));
+                        this.installRestThing(port, 'transforms', uri.slice(1), path, ssl));
                 }, transforms);
             }
             else if ( display.verbose ) {
@@ -894,7 +896,7 @@
             }
         }
 
-        installRestThing(port, kind, filename, path)
+        installRestThing(port, kind, filename, path, ssl)
         {
             // extract mime type from extension
             const type = (ext) => {
@@ -911,7 +913,7 @@
             // the basename and extension
             let [ name, ext ] = filename.split('.');
             // return the actual action
-            return new act.ServerRestDeploy(kind, name, path, type(ext), port);
+            return new act.ServerRestDeploy(kind, name, path, type(ext), port, ssl);
         }
 
         loadPlain(ctxt, display, matches, dir)
